@@ -1,0 +1,135 @@
+.az-page { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.az-header h1 { font-size: 1.75rem; font-weight: 800; color: #111827; margin-bottom: 0.3rem; }
+.az-header p { color: #6b7280; font-size: 0.9rem; }
+
+.az-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.az-panel { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.az-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.az-panel-title { font-weight: 700; font-size: 0.95rem; color: #111827; }
+.az-panel-badge { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.5px; color: #9ca3af; background: #f3f4f6; padding: 0.2rem 0.6rem; border-radius: 4px; }
+
+.az-textarea {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.85rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  resize: vertical;
+  color: #374151;
+  background: #fafafa;
+  transition: border-color 0.15s;
+  min-height: 200px;
+}
+.az-textarea:focus { outline: none; border-color: #111827; background: #fff; }
+.az-textarea::placeholder { color: #9ca3af; }
+.az-textarea:disabled { opacity: 0.6; }
+
+.az-upload {
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  min-height: 200px;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: center;
+}
+.az-upload:hover, .az-upload.drag-over { border-color: #111827; background: #f9fafb; }
+
+.az-upload-icon { color: #9ca3af; }
+.az-upload-text { font-size: 0.875rem; color: #6b7280; line-height: 1.5; }
+.az-upload-hint { font-size: 0.75rem; color: #9ca3af; }
+
+.az-preview-img { max-height: 180px; max-width: 100%; border-radius: 6px; object-fit: contain; }
+.az-filename { font-size: 0.8rem; color: #6b7280; word-break: break-all; }
+
+.az-analyze-row { display: flex; justify-content: center; }
+
+.az-analyze-btn {
+  padding: 0.75rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 8px;
+  gap: 0.6rem;
+}
+
+/* ── RESULT AREA ── */
+.az-result-area { min-height: 200px; }
+
+.az-awaiting {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  background: #fff;
+  text-align: center;
+}
+.az-awaiting h3 { font-size: 1.1rem; color: #6b7280; font-weight: 600; }
+.az-awaiting p { font-size: 0.875rem; color: #9ca3af; max-width: 320px; line-height: 1.6; }
+
+.az-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #111827;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Result card */
+.az-result-card { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.az-result-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.az-result-title { font-size: 1.1rem; font-weight: 700; color: #111827; margin-bottom: 0.2rem; }
+.az-result-type { font-size: 0.875rem; color: #6b7280; }
+
+.az-risk-block {
+  border: 2px solid;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  min-width: 90px;
+}
+.az-risk-level { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; }
+.az-risk-score { font-size: 1.4rem; font-weight: 800; color: #111827; }
+
+.az-result-sections { display: flex; flex-direction: column; gap: 1rem; border-top: 1px solid #f3f4f6; padding-top: 1rem; }
+
+.az-section h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #9ca3af; margin-bottom: 0.5rem; }
+.az-section p { font-size: 0.9rem; color: #374151; line-height: 1.65; }
+
+.az-flags { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.az-flags li { font-size: 0.875rem; color: #374151; padding-left: 1.1rem; position: relative; }
+.az-flags li::before { content: '•'; position: absolute; left: 0; color: #ef4444; font-weight: 700; }
+
+.az-actions { padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.az-actions li { font-size: 0.875rem; color: #374151; }

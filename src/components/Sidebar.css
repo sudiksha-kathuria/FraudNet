@@ -1,0 +1,84 @@
+.sidebar {
+  width: 220px;
+  min-width: 220px;
+  height: calc(100vh - 56px);
+  background: #fff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 0.75rem 0.75rem;
+  position: sticky;
+  top: 56px;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.sidebar-brand a {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.25rem;
+  padding: 0 0.5rem;
+}
+
+.sidebar-logo {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #111827;
+  line-height: 1.3;
+}
+
+.sidebar-tagline {
+  font-size: 0.72rem;
+  color: #9ca3af;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  margin-top: 0.1rem;
+}
+
+.sidebar-new-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #111827;
+  color: #fff;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  transition: opacity 0.15s;
+}
+.sidebar-new-btn:hover { opacity: 0.85; }
+.sidebar-new-btn span { font-size: 1.1rem; line-height: 1; }
+
+.sidebar-spacer {
+  flex: 1;
+}
+
+.sn-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 7px;
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+.sn-item:hover { background: #f3f4f6; color: #111827; }
+.sn-item.active { background: #f0f0f0; color: #111827; font-weight: 600; }
+.sn-item svg { flex-shrink: 0; }
+
+.sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.sidebar-divider {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 0.75rem 0;
+}
