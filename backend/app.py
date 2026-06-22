@@ -55,9 +55,9 @@ def create_app(config_name=None):
     
     # Initialize services
     try:
-        api_key = app.config['GEMINI_API_KEY']
+        api_key = app.config['GROQ_API_KEY']
         if not api_key:
-            logger.warning("GEMINI_API_KEY not set. Fraud analysis may not work properly.")
+            logger.warning("GROQ_API_KEY not set. Fraud analysis may not work properly.")
         
         gemini_service = GeminiService(api_key)
         logger.info("Gemini service initialized")

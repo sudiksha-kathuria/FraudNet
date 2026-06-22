@@ -14,7 +14,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # API Keys
-    GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+    GROQ_API_KEY = os.getenv('GROQ_API_KEY')
     
     # File Upload
     MAX_FILE_SIZE = int(os.getenv('MAX_FILE_SIZE', 10485760))  # 10MB
