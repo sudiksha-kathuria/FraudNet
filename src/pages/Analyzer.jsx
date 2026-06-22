@@ -1,25 +1,6 @@
 import { useState, useRef } from 'react';
+import { analyzeText, analyzeImage } from '../services/api';
 import './Analyzer.css';
-
-const MOCK_RESULT = {
-  scam_type: 'SMS Smishing',
-  risk_level: 'critical',
-  risk_score: 9.2,
-  red_flags: [
-    'Urgent language pressuring immediate action',
-    'Suspicious shortened URL disguising destination',
-    'Impersonating a legitimate financial institution',
-    'Requests sensitive credentials via link',
-  ],
-  explanation:
-    'This message exhibits multiple high-confidence indicators of an SMS phishing (smishing) attack. The sender mimics a bank notification and leverages urgency to bypass critical thinking, directing victims to a credential-harvesting site.',
-  recommended_actions: [
-    'Do not click any links in the message.',
-    'Block and report the sender number to your carrier.',
-    'Report to the FTC at reportfraud.ftc.gov.',
-    'Alert your bank if you clicked the link.',
-  ],
-};
 
 export default function Analyzer() {
   const [text, setText] = useState('');
@@ -45,9 +26,36 @@ export default function Analyzer() {
     setError('');
     setResult(null);
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1800));
-    setResult(MOCK_RESULT);
-    setLoading(false);
+
+    try {
+      let apiResult;
+      
+      if (text.trim()) {
+        // Call text analysis API
+        apiResult = await analyzeText(text);
+      } else if (file) {
+        // Call image analysis API
+        apiResult = await analyzeImage(file);
+      }
+
+      // Transform API response to component format
+      const transformedResult = {
+        scam_type: apiResult.scam_type || 'Unknown',
+        risk_level: (apiResult.risk_level || 'low').toLowerCase(),
+        risk_score: apiResult.risk_score || 0,
+        red_flags: apiResult.red_flags || [],
+        explanation: apiResult.explanation || 'No explanation available',
+        recommended_actions: apiResult.recommendation ? [apiResult.recommendation] : [],
+        id: apiResult.id,
+      };
+      
+      setResult(transformedResult);
+    } catch (err) {
+      setError(err.message || 'Failed to analyze. Please try again.');
+      console.error('Analysis error:', err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   const riskColor = { critical: '#ef4444', high: '#f97316', medium: '#eab308', low: '#22c55e' };

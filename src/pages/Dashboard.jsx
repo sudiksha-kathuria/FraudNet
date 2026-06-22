@@ -1,31 +1,72 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getDashboardData } from '../services/api';
 import './Dashboard.css';
-
-const STATS = [
-  { label: 'TOTAL CASES ANALYZED', value: '1,284', sub: '↑ +12% vs last month', dark: false },
-  { label: 'CRITICAL CASES', value: '42', sub: '⚠ High priority alerts', dark: true },
-  { label: 'ACTIVE REPORTS', value: '18', sub: '⏱ Pending review', dark: false },
-];
-
-const CATEGORIES = [
-  { name: 'Phishing Attacks', pct: 45 },
-  { name: 'Identity Theft',   pct: 28 },
-  { name: 'Financial Scams',  pct: 15 },
-  { name: 'Impersonation',    pct: 12 },
-];
-
-const RECENT = [
-  { date: '2024-05-12', type: 'SMS Smishing',       id: 'TX-8821', level: 'critical' },
-  { date: '2024-05-12', type: 'Bank Impersonation', id: 'TX-8819', level: 'suspicious' },
-  { date: '2024-05-11', type: 'Crypto Drainer',     id: 'TX-8815', level: 'critical' },
-  { date: '2024-05-11', type: 'Support Scam',       id: 'TX-8812', level: 'safe' },
-  { date: '2024-05-10', type: 'Gov. Grant Fraud',   id: 'TX-8801', level: 'suspicious' },
-];
 
 const LEVEL_LABEL = { critical: 'CRITICAL', suspicious: 'SUSPICIOUS', safe: 'VERIFIED SAFE', low: 'LOW' };
 const LEVEL_CLASS = { critical: 'badge badge-critical', suspicious: 'badge badge-suspicious', safe: 'badge badge-safe', low: 'badge badge-low' };
 
 export default function Dashboard() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const dashboardData = await getDashboardData();
+        setData(dashboardData);
+      } catch (err) {
+        console.error('Failed to load dashboard data:', err);
+        setError(err.message || 'Failed to load dashboard data');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="db-page">
+        <div className="db-header">
+          <h1>Vigilance Overview</h1>
+          <p>Real-time fraud analysis and threat landscape monitoring.</p>
+        </div>
+        <div style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
+          Loading dashboard data...
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="db-page">
+        <div className="db-header">
+          <h1>Vigilance Overview</h1>
+          <p>Real-time fraud analysis and threat landscape monitoring.</p>
+        </div>
+        <div style={{ textAlign: 'center', padding: '40px', color: '#f87171' }}>
+          ⚠️ {error}
+        </div>
+      </div>
+    );
+  }
+
+  const stats = [
+    { label: 'TOTAL CASES ANALYZED', value: data?.total_cases || 0, sub: '↑ All time', dark: false },
+    { label: 'CRITICAL CASES', value: data?.critical_cases || 0, sub: '⚠ High priority alerts', dark: true },
+    { label: 'HIGH PRIORITY', value: data?.high_cases || 0, sub: '⏱ Requires attention', dark: false },
+  ];
+
+  const categories = Object.entries(data?.categories || {}).map(([name, count]) => ({
+    name,
+    count,
+    pct: data?.total_cases ? Math.round((count / data.total_cases) * 100) : 0,
+  }));
+
   return (
     <div className="db-page">
       {/* Header */}
@@ -48,7 +89,7 @@ export default function Dashboard() {
 
       {/* Stat cards */}
       <div className="db-stats">
-        {STATS.map(s => (
+        {stats.map(s => (
           <div key={s.label} className={`card db-stat${s.dark ? ' db-stat-danger' : ''}`}>
             <div className="db-stat-inner">
               <div>
@@ -73,7 +114,7 @@ export default function Dashboard() {
             <span className="db-live-badge">Live Data</span>
           </div>
           <div className="db-bars">
-            {CATEGORIES.map(c => (
+            {categories.map(c => (
               <div key={c.name} className="db-bar-row">
                 <span className="db-bar-label">{c.name}</span>
                 <div className="db-bar-track">

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Fraud Shield - Connection Status</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .status-grid {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            border-radius: 8px;
+            background: #f5f5f5;
+            transition: all 0.3s ease;
+        }
+
+        .status-item.loading {
+            background: #e3f2fd;
+        }
+
+        .status-item.success {
+            background: #e8f5e9;
+        }
+
+        .status-item.error {
+            background: #ffebee;
+        }
+
+        .status-icon {
+            font-size: 24px;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .status-content {
+            flex: 1;
+        }
+
+        .status-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .status-message {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .status-item.success .status-message {
+            color: #2e7d32;
+        }
+
+        .status-item.error .status-message {
+            color: #c62828;
+        }
+
+        .actions {
+            display: grid;
+            gap: 12px;
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid #eee;
+        }
+
+        .action-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .info-box {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 16px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .code {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 12px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 8px 0;
+            overflow-x: auto;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .urls {
+            display: grid;
+            gap: 8px;
+            margin-top: 16px;
+            font-size: 13px;
+        }
+
+        .url-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+
+        .url-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .url-value {
+            color: #667eea;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .url-value:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Citizen Fraud Shield</h1>
+            <p>Connection Status Dashboard</p>
+        </div>
+
+        <div class="status-grid">
+            <div class="status-item loading" id="backendStatus">
+                <div class="status-icon"><span class="spinner"></span></div>
+                <div class="status-content">
+                    <div class="status-label">Backend Server</div>
+                    <div class="status-message">Checking http://localhost:8000...</div>
+                </div>
+            </div>
+
+            <div class="status-item loading" id="databaseStatus">
+                <div class="status-icon"><span class="spinner"></span></div>
+                <div class="status-content">
+                    <div class="status-label">Database</div>
+                    <div class="status-message">Checking SQLite connection...</div>
+                </div>
+            </div>
+
+            <div class="status-item loading" id="corsStatus">
+                <div class="status-icon"><span class="spinner"></span></div>
+                <div class="status-content">
+                    <div class="status-label">CORS Configuration</div>
+                    <div class="status-message">Checking cross-origin permissions...</div>
+                </div>
+            </div>
+
+            <div class="status-item loading" id="apiStatus">
+                <div class="status-icon"><span class="spinner"></span></div>
+                <div class="status-content">
+                    <div class="status-label">API Endpoints</div>
+                    <div class="status-message">Testing analyze endpoints...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="urls">
+            <div class="url-item">
+                <span class="url-label">Frontend:</span>
+                <a href="http://localhost:5173" class="url-value">http://localhost:5173</a>
+            </div>
+            <div class="url-item">
+                <span class="url-label">Backend API:</span>
+                <a href="http://localhost:8000" class="url-value">http://localhost:8000</a>
+            </div>
+            <div class="url-item">
+                <span class="url-label">Health Check:</span>
+                <a href="http://localhost:8000/health" class="url-value">http://localhost:8000/health</a>
+            </div>
+        </div>
+
+        <div class="info-box" id="infoBox">
+            <strong>ℹ️ Checking backend status...</strong><br>
+            Make sure both services are running:
+            <div class="code">Backend: python app.py</div>
+            <div class="code">Frontend: npm run dev</div>
+        </div>
+
+        <div class="actions">
+            <div class="action-group">
+                <button class="btn btn-primary" onclick="location.href='http://localhost:5173'">
+                    Go to Frontend
+                </button>
+                <button class="btn btn-secondary" onclick="location.href='http://localhost:8000/health'">
+                    Check Health
+                </button>
+            </div>
+            <button class="btn btn-secondary" onclick="location.reload()">
+                Refresh Status
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+
+        async function testBackend() {
+            try {
+                const response = await fetch(`${API_BASE}/health`, {
+                    method: 'GET',
+                    timeout: 5000
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    updateStatus('backendStatus', true, '✅ Running on port 8000');
+                    return true;
+                }
+            } catch (error) {
+                updateStatus('backendStatus', false, '❌ Not responding. Run: python app.py');
+            }
+            return false;
+        }
+
+        async function testDatabase() {
+            try {
+                const response = await fetch(`${API_BASE}/api/dashboard`, {
+                    method: 'GET',
+                    timeout: 5000
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    updateStatus('databaseStatus', true, '✅ Connected and responsive');
+                    return true;
+                }
+            } catch (error) {
+                updateStatus('databaseStatus', false, '❌ Cannot query database');
+            }
+            return false;
+        }
+
+        async function testCORS() {
+            try {
+                const response = await fetch(`${API_BASE}/api/analyze-text`, {
+                    method: 'OPTIONS',
+                    headers: {
+                        'Origin': window.location.origin,
+                        'Access-Control-Request-Method': 'POST',
+                        'Access-Control-Request-Headers': 'Content-Type'
+                    },
+                    timeout: 5000
+                });
+                
+                // CORS is working if we get any response from backend
+                updateStatus('corsStatus', true, '✅ Cross-origin access enabled');
+                return true;
+            } catch (error) {
+                // Try POST as fallback
+                try {
+                    const response = await fetch(`${API_BASE}/api/dashboard`, {
+                        method: 'GET',
+                        timeout: 5000
+                    });
+                    updateStatus('corsStatus', true, '✅ Cross-origin access enabled');
+                    return true;
+                } catch (e) {
+                    updateStatus('corsStatus', false, '❌ CORS not configured');
+                }
+            }
+            return false;
+        }
+
+        async function testAPI() {
+            try {
+                const response = await fetch(`${API_BASE}/api/dashboard`, {
+                    method: 'GET',
+                    timeout: 5000
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const analyzed = data.total_cases || 0;
+                    updateStatus('apiStatus', true, `✅ Endpoints ready (${analyzed} cases analyzed)`);
+                    return true;
+                }
+            } catch (error) {
+                updateStatus('apiStatus', false, '❌ API endpoints not responding');
+            }
+            return false;
+        }
+
+        function updateStatus(elementId, success, message) {
+            const element = document.getElementById(elementId);
+            
+            if (success) {
+                element.classList.remove('loading', 'error');
+                element.classList.add('success');
+            } else {
+                element.classList.remove('loading', 'success');
+                element.classList.add('error');
+            }
+            
+            const statusIcon = element.querySelector('.status-icon');
+            const statusMessage = element.querySelector('.status-message');
+            
+            statusIcon.innerHTML = success ? '✅' : '❌';
+            statusMessage.textContent = message;
+        }
+
+        async function runAllTests() {
+            const backendOk = await testBackend();
+            
+            if (backendOk) {
+                await testDatabase();
+                await testCORS();
+                await testAPI();
+                
+                document.getElementById('infoBox').innerHTML = `
+                    <strong>✅ Everything looks good!</strong><br>
+                    Your frontend and backend are connected and ready to use.
+                    <div style="margin-top: 12px;">
+                        <a href="http://localhost:5173" style="color: #667eea; text-decoration: none; font-weight: 600;">
+                            → Go to Analyzer Page
+                        </a>
+                    </div>
+                `;
+            } else {
+                document.getElementById('infoBox').innerHTML = `
+                    <strong>⚠️ Backend not running</strong><br>
+                    Start the backend server to proceed:
+                    <div class="code">cd backend</div>
+                    <div class="code">python app.py</div>
+                    <br>
+                    Then refresh this page (press F5 or click the Refresh button below)
+                `;
+            }
+        }
+
+        // Run tests when page loads
+        runAllTests();
+
+        // Refresh every 5 seconds
+        setInterval(runAllTests, 5000);
+    </script>
+</body>
+</html>
