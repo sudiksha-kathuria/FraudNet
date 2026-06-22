@@ -1,31 +1,48 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { getDashboardData } from '../services/api';
 import './Dashboard.css';
 
-const STATS = [
-  { label: 'TOTAL CASES ANALYZED', value: '1,284', sub: '↑ +12% vs last month', dark: false },
-  { label: 'CRITICAL CASES', value: '42', sub: '⚠ High priority alerts', dark: true },
-  { label: 'ACTIVE REPORTS', value: '18', sub: '⏱ Pending review', dark: false },
-];
+const LEVEL_LABEL = { critical: 'CRITICAL', suspicious: 'SUSPICIOUS', safe: 'VERIFIED SAFE', low: 'LOW', high: 'HIGH', medium: 'MEDIUM' };
+const LEVEL_CLASS  = { critical: 'badge badge-critical', suspicious: 'badge badge-suspicious', safe: 'badge badge-safe', low: 'badge badge-low', high: 'badge badge-critical', medium: 'badge badge-suspicious' };
 
-const CATEGORIES = [
-  { name: 'Phishing Attacks', pct: 45 },
-  { name: 'Identity Theft',   pct: 28 },
-  { name: 'Financial Scams',  pct: 15 },
-  { name: 'Impersonation',    pct: 12 },
-];
-
-const RECENT = [
-  { date: '2024-05-12', type: 'SMS Smishing',       id: 'TX-8821', level: 'critical' },
-  { date: '2024-05-12', type: 'Bank Impersonation', id: 'TX-8819', level: 'suspicious' },
-  { date: '2024-05-11', type: 'Crypto Drainer',     id: 'TX-8815', level: 'critical' },
-  { date: '2024-05-11', type: 'Support Scam',       id: 'TX-8812', level: 'safe' },
-  { date: '2024-05-10', type: 'Gov. Grant Fraud',   id: 'TX-8801', level: 'suspicious' },
-];
-
-const LEVEL_LABEL = { critical: 'CRITICAL', suspicious: 'SUSPICIOUS', safe: 'VERIFIED SAFE', low: 'LOW' };
-const LEVEL_CLASS = { critical: 'badge badge-critical', suspicious: 'badge badge-suspicious', safe: 'badge badge-safe', low: 'badge badge-low' };
+function riskLevelKey(level) {
+  const l = (level || '').toLowerCase();
+  if (l === 'critical') return 'critical';
+  if (l === 'high') return 'high';
+  if (l === 'medium') return 'medium';
+  return 'low';
+}
 
 export default function Dashboard() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getDashboardData()
+      .then(setData)
+      .catch(() => setData(null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const total    = data?.total_cases    ?? 0;
+  const critical = data?.critical_cases ?? 0;
+  const active   = data ? (data.high_cases ?? 0) + (data.medium_cases ?? 0) : 0;
+
+  const categoriesObj = data?.categories ?? {};
+  const catEntries = Object.entries(categoriesObj);
+  const catTotal = catEntries.reduce((s, [, v]) => s + v, 0) || 1;
+  const categories = catEntries
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([name, count]) => ({ name, pct: Math.round((count / catTotal) * 100) }));
+
+  const STATS = [
+    { label: 'TOTAL CASES ANALYZED', value: total.toLocaleString(), sub: 'All time analyses', dark: false },
+    { label: 'CRITICAL CASES',        value: critical.toLocaleString(), sub: '⚠ High priority alerts', dark: true },
+    { label: 'ACTIVE REPORTS',        value: active.toLocaleString(), sub: '⏱ High & medium risk', dark: false },
+  ];
+
   return (
     <div className="db-page">
       {/* Header */}
@@ -53,7 +70,9 @@ export default function Dashboard() {
             <div className="db-stat-inner">
               <div>
                 <p className="db-stat-label">{s.label}</p>
-                <p className={`db-stat-val${s.dark ? ' db-stat-val-red' : ''}`}>{s.value}</p>
+                <p className={`db-stat-val${s.dark ? ' db-stat-val-red' : ''}`}>
+                  {loading ? '—' : s.value}
+                </p>
                 <p className="db-stat-sub">{s.sub}</p>
               </div>
               <div className={`db-stat-icon${s.dark ? ' db-stat-icon-red' : ''}`}>
@@ -73,18 +92,24 @@ export default function Dashboard() {
             <span className="db-live-badge">Live Data</span>
           </div>
           <div className="db-bars">
-            {CATEGORIES.map(c => (
-              <div key={c.name} className="db-bar-row">
-                <span className="db-bar-label">{c.name}</span>
-                <div className="db-bar-track">
-                  <div className="db-bar-fill" style={{width: `${c.pct}%`}} />
+            {loading ? (
+              <p style={{color:'#9ca3af',fontSize:'14px'}}>Loading...</p>
+            ) : categories.length > 0 ? (
+              categories.map(c => (
+                <div key={c.name} className="db-bar-row">
+                  <span className="db-bar-label">{c.name}</span>
+                  <div className="db-bar-track">
+                    <div className="db-bar-fill" style={{width: `${c.pct}%`}} />
+                  </div>
+                  <span className="db-bar-pct">{c.pct}%</span>
                 </div>
-                <span className="db-bar-pct">{c.pct}%</span>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p style={{color:'#9ca3af',fontSize:'14px'}}>No cases analyzed yet. Run an analysis to see data here.</p>
+            )}
           </div>
           <div className="db-quote">
-            <p>"Phishing remains the primary vector for fraudulent entry into citizen accounts this quarter."</p>
+            <p>"Use the Fraud Analyzer to submit suspicious messages and see real threat data populate here."</p>
           </div>
         </div>
 
@@ -92,28 +117,34 @@ export default function Dashboard() {
         <div className="card db-recent-card">
           <div className="db-recent-head">
             <h2>Recent Analyses</h2>
-            <button className="db-view-all">View All Records</button>
+            <Link to="/analyzer" className="db-view-all">New Analysis →</Link>
           </div>
-          <table className="db-table">
-            <thead>
-              <tr>
-                <th>DATE</th>
-                <th>SCAM TYPE</th>
-                <th>ID</th>
-                <th>RISK LEVEL</th>
-              </tr>
-            </thead>
-            <tbody>
-              {RECENT.map(r => (
-                <tr key={r.id}>
-                  <td>{r.date}</td>
-                  <td>{r.type}</td>
-                  <td><code className="db-id">{r.id}</code></td>
-                  <td><span className={LEVEL_CLASS[r.level]}>{LEVEL_LABEL[r.level]}</span></td>
+          {loading ? (
+            <p style={{color:'#9ca3af',fontSize:'14px',padding:'16px 0'}}>Loading...</p>
+          ) : data && total > 0 ? (
+            <table className="db-table">
+              <thead>
+                <tr>
+                  <th>SCAM TYPE</th>
+                  <th>RISK LEVEL</th>
+                  <th>COUNT</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {catEntries.sort((a,b) => b[1]-a[1]).slice(0,5).map(([type, count]) => (
+                  <tr key={type}>
+                    <td>{type}</td>
+                    <td><span className="badge badge-critical">DETECTED</span></td>
+                    <td><code className="db-id">{count}</code></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p style={{color:'#9ca3af',fontSize:'14px',padding:'16px 0'}}>
+              No analyses yet. <Link to="/analyzer" style={{color:'#111827'}}>Run your first analysis →</Link>
+            </p>
+          )}
         </div>
       </div>
 
@@ -130,8 +161,12 @@ export default function Dashboard() {
           </div>
           <div>
             <h3>AI Recommendation</h3>
-            <p>Based on your recent 'Phishing' cases, we recommend updating the local security policy filters to include regional bank TLD variations.</p>
-            <button className="db-apply-btn">Apply Filter Policy →</button>
+            <p>
+              {critical > 0
+                ? `${critical} critical case${critical > 1 ? 's' : ''} detected. Review and report to NCRP at cybercrime.gov.in immediately.`
+                : 'Submit suspicious messages via the Fraud Analyzer to receive AI-powered recommendations.'}
+            </p>
+            <Link to="/analyzer" className="db-apply-btn">Go to Analyzer →</Link>
           </div>
         </div>
       </div>

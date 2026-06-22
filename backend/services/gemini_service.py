@@ -6,7 +6,7 @@ logger = get_logger(__name__)
 
 class GeminiService:
     """Service for Google Gemini API integration"""
-
+    
     def __init__(self, api_key):
         self.api_key = api_key
         genai.configure(api_key=api_key)

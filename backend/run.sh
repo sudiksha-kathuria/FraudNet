@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Citizen Fraud Shield Backend - Development Run Script
+
+echo "Installing dependencies..."
+pip install -r requirements.txt
+
+echo ""
+echo "Setting up environment..."
+if [ ! -f .env ]; then
+    echo "Creating .env from .env.example..."
+    cp .env.example .env
+    echo ""
+    echo "NOTE: Please update .env with your Gemini API key"
+    echo "GEMINI_API_KEY=your_api_key_here"
+    echo ""
+fi
+
+echo ""
+echo "Starting Flask application..."
+echo "Server will be available at http://localhost:8000"
+echo ""
+
+python app.py

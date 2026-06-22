@@ -1,10 +1,7 @@
 import os
 import logging
 from dotenv import load_dotenv
-
-# Load .env before any other imports so os.getenv() calls in config.py see the values
 load_dotenv()
-
 from flask import Flask, jsonify
 from flask_cors import CORS
 from config import config
@@ -19,6 +16,9 @@ from services import (
 from routes import register_routes
 from routes.analysis import init_analysis_routes
 from utils import setup_logging
+
+# Load environment variables
+load_dotenv()
 
 # Setup logging
 setup_logging()

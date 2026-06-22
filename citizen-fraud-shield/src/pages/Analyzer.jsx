@@ -1,25 +1,24 @@
 import { useState, useRef } from 'react';
+import { analyzeText, analyzeImage } from '../services/api';
 import './Analyzer.css';
 
-const MOCK_RESULT = {
-  scam_type: 'SMS Smishing',
-  risk_level: 'critical',
-  risk_score: 9.2,
-  red_flags: [
-    'Urgent language pressuring immediate action',
-    'Suspicious shortened URL disguising destination',
-    'Impersonating a legitimate financial institution',
-    'Requests sensitive credentials via link',
-  ],
-  explanation:
-    'This message exhibits multiple high-confidence indicators of an SMS phishing (smishing) attack. The sender mimics a bank notification and leverages urgency to bypass critical thinking, directing victims to a credential-harvesting site.',
-  recommended_actions: [
-    'Do not click any links in the message.',
-    'Block and report the sender number to your carrier.',
-    'Report to the FTC at reportfraud.ftc.gov.',
-    'Alert your bank if you clicked the link.',
-  ],
-};
+function normalizeResult(data) {
+  const level = (data.risk_level || 'low').toLowerCase();
+  const score = data.risk_score != null ? (data.risk_score / 10).toFixed(1) : '0.0';
+  const actions = data.recommendation
+    ? data.recommendation.split('\n').filter(Boolean)
+    : [];
+  return {
+    id: data.id,
+    scam_type: data.scam_type || 'Unknown',
+    risk_level: level,
+    risk_score: parseFloat(score),
+    red_flags: data.red_flags || [],
+    explanation: data.explanation || '',
+    recommended_actions: actions,
+    evidence: data.evidence || {},
+  };
+}
 
 export default function Analyzer() {
   const [text, setText] = useState('');
@@ -45,9 +44,26 @@ export default function Analyzer() {
     setError('');
     setResult(null);
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1800));
-    setResult(MOCK_RESULT);
-    setLoading(false);
+    try {
+      let data;
+      if (file) {
+        data = await analyzeImage(file);
+      } else {
+        data = await analyzeText(text.trim());
+      }
+      if (data.error) {
+        setError(data.error);
+      } else {
+        setResult(normalizeResult(data));
+      }
+    } catch (err) {
+      setError(
+        err.response?.data?.error ||
+        'Failed to connect to the analysis server. Make sure the backend is running on port 8000.'
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   const riskColor = { critical: '#ef4444', high: '#f97316', medium: '#eab308', low: '#22c55e' };
@@ -161,12 +177,22 @@ export default function Analyzer() {
                 <h4>Explanation</h4>
                 <p>{result.explanation}</p>
               </section>
-              <section className="az-section">
-                <h4>Recommended Actions</h4>
-                <ol className="az-actions">
-                  {result.recommended_actions.map((a, i) => <li key={i}>{a}</li>)}
-                </ol>
-              </section>
+              {result.recommended_actions.length > 0 && (
+                <section className="az-section">
+                  <h4>Recommended Actions</h4>
+                  <ol className="az-actions">
+                    {result.recommended_actions.map((a, i) => <li key={i}>{a}</li>)}
+                  </ol>
+                </section>
+              )}
+              {result.evidence?.urls?.length > 0 && (
+                <section className="az-section">
+                  <h4>Suspicious URLs Found</h4>
+                  <ul className="az-flags">
+                    {result.evidence.urls.map((u, i) => <li key={i}><code>{u}</code></li>)}
+                  </ul>
+                </section>
+              )}
             </div>
           </div>
         )}
