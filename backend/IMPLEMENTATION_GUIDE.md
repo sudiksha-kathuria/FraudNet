@@ -28,8 +28,8 @@ A comprehensive backend for an AI-powered fraud detection system called **Citize
 
 ### 4. **AI/ML Services** (`services/`)
 
-#### GeminiService (`gemini_service.py`)
-- Google Generative AI integration
+#### GroqService (`groq_service.py`)
+- Groq integration
 - Multi-agent fraud analysis workflow:
   - Agent 1: Evidence Extraction (phones, URLs, UPIs, names, organizations)
   - Agent 2: Fraud Classification (Digital Arrest, UPI Fraud, OTP Scam, Phishing, Loan Scam, Investment Scam)
@@ -114,7 +114,7 @@ backend/
 │   └── dashboard.py               # Dashboard endpoints
 ├── services/
 │   ├── __init__.py
-│   ├── gemini_service.py          # Gemini API
+│   ├── groq_service.py          # Groq API
 │   ├── ocr_service.py             # OCR processing
 │   ├── fraud_analysis_service.py  # Analysis logic
 │   └── report_service.py          # Report generation
@@ -134,7 +134,7 @@ backend/
 
 - **Framework**: Flask 3.0.0
 - **Database**: SQLite with SQLAlchemy ORM
-- **AI/ML**: Google Generative AI (Gemini)
+- **AI/ML**: Groq (Groq)
 - **OCR**: EasyOCR
 - **Image Processing**: Pillow
 - **Web Server**: Flask development server
@@ -145,7 +145,7 @@ backend/
 ## Key Features
 
 ### 1. **Multi-Agent AI Workflow**
-The system simulates a multi-agent architecture using Gemini API:
+The system simulates a multi-agent architecture using Groq API:
 
 ```
 User Input
@@ -260,13 +260,13 @@ GET /health
 ### Requirements
 - Python 3.8+
 - pip (Python package manager)
-- Google Gemini API key
+- Google Groq API key
 
 ### Quick Start
 ```bash
 cd backend
 cp .env.example .env
-# Edit .env and add Gemini API key
+# Edit .env and add Groq API key
 pip install -r requirements.txt
 python app.py
 ```
@@ -328,7 +328,7 @@ FLASK_DEBUG=True
 DATABASE_URL=sqlite:///fraud_detection.db
 
 # API
-GEMINI_API_KEY=your_key_here
+GROQ_API_KEY=your_key_here
 
 # Server
 HOST=0.0.0.0
@@ -342,7 +342,7 @@ UPLOAD_FOLDER=uploads
 ## Performance Considerations
 
 - OCR processing may take 2-5 seconds per image (first call slower due to model loading)
-- Gemini API calls have rate limits (free tier: 60 requests/minute)
+- Groq API calls have rate limits (free tier: 60 requests/minute)
 - SQLite suitable for development; use PostgreSQL for production
 - File uploads limited to 10MB by default
 

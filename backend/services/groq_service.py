@@ -4,7 +4,7 @@ from utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-class GeminiService:
+class GroqService:
     def __init__(self, api_key):
         self.client = Groq(api_key=api_key)
         self.model = 'llama-3.3-70b-versatile'

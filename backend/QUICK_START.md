@@ -4,7 +4,7 @@
 
 A complete Flask backend for fraud detection with:
 - ✅ 6 API endpoints
-- ✅ Multi-agent AI using Google Gemini
+- ✅ Multi-agent AI using Google Groq
 - ✅ OCR text extraction from images
 - ✅ SQLite database persistence
 - ✅ NCRP complaint generation
@@ -21,7 +21,7 @@ python -m venv venv
 # Linux/Mac: source venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
-# Edit .env and add: GEMINI_API_KEY=your_key_here
+# Edit .env and add: GROQ_API_KEY=your_key_here
 python app.py
 ```
 
@@ -117,7 +117,7 @@ Edit `.env`:
 FLASK_ENV=development
 FLASK_DEBUG=True
 DATABASE_URL=sqlite:///fraud_detection.db
-GEMINI_API_KEY=your_key_here
+GROQ_API_KEY=your_key_here
 HOST=0.0.0.0
 PORT=8000
 ```
@@ -221,7 +221,7 @@ python-dotenv==1.0.0
 - [ ] Python 3.8+ installed
 - [ ] Virtual environment created & activated
 - [ ] Dependencies installed
-- [ ] `.env` created with GEMINI_API_KEY
+- [ ] `.env` created with GROQ_API_KEY
 - [ ] `python app.py` starts without errors
 - [ ] `http://localhost:8000/health` returns status
 - [ ] Can make POST request to `/api/analyze-text`
@@ -248,7 +248,7 @@ Before deploying:
 ## 💡 Key Files
 
 - `app.py` - Start here (main entry point)
-- `services/gemini_service.py` - AI analysis logic
+- `services/groq_service.py` - AI analysis logic
 - `services/ocr_service.py` - Image processing
 - `models/fraud_report.py` - Database schema
 - `routes/analysis.py` - API endpoints

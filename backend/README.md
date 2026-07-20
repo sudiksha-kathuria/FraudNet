@@ -1,6 +1,6 @@
 # Citizen Fraud Shield - Backend API
 
-An AI-powered fraud detection system using Flask, Google Gemini API, and machine learning for text analysis and OCR.
+An AI-powered fraud detection system using Flask, Google Groq API, and machine learning for text analysis and OCR.
 
 ## Features
 
@@ -20,7 +20,7 @@ An AI-powered fraud detection system using Flask, Google Gemini API, and machine
 
 - **Flask**: Web framework
 - **SQLAlchemy**: ORM for database
-- **Google Gemini API**: AI-powered fraud analysis
+- **Google Groq API**: AI-powered fraud analysis
 - **EasyOCR**: Optical character recognition
 - **Pillow**: Image processing
 - **Flask-CORS**: CORS support
@@ -42,7 +42,7 @@ backend/
 │   └── dashboard.py      # Dashboard endpoints
 ├── services/
 │   ├── __init__.py
-│   ├── gemini_service.py      # Gemini API integration
+│   ├── groq_service.py      # Groq API integration
 │   ├── ocr_service.py         # OCR processing
 │   ├── fraud_analysis_service.py  # Fraud analysis logic
 │   └── report_service.py      # Report generation
@@ -80,9 +80,9 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Edit `.env` and add your Google Gemini API key:
+Edit `.env` and add your Google Groq API key:
 ```
-GEMINI_API_KEY=your_api_key_here
+GROQ_API_KEY=your_api_key_here
 ```
 
 ### 5. Run the application
@@ -266,7 +266,7 @@ Check API health and service status.
     "status": "healthy",
     "message": "Citizen Fraud Shield Backend is running",
     "services": {
-        "gemini": "initialized",
+        "groq": "initialized",
         "ocr": "initialized",
         "database": "initialized"
     }
@@ -374,7 +374,7 @@ VITE_API_URL=http://localhost:8000
 
 ## Security Considerations
 
-1. **API Key**: Store Gemini API key in `.env`, never commit to git
+1. **API Key**: Store Groq API key in `.env`, never commit to git
 2. **File Upload**: Validate and sanitize all uploaded files
 3. **Input Validation**: All user inputs are validated
 4. **CORS**: Configure appropriate CORS origins for production

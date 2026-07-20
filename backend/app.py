@@ -8,7 +8,7 @@ from config import config
 from database import db
 from models import FraudReport
 from services import (
-    GeminiService,
+    GroqService,
     OCRService,
     FraudAnalysisService,
     ReportService
@@ -59,11 +59,11 @@ def create_app(config_name=None):
         if not api_key:
             logger.warning("GROQ_API_KEY not set. Fraud analysis may not work properly.")
         
-        gemini_service = GeminiService(api_key)
-        logger.info("Gemini service initialized")
+        groq_service = GroqService(api_key)
+        logger.info("Groq service initialized")
     except Exception as e:
-        logger.error(f"Failed to initialize Gemini service: {str(e)}")
-        gemini_service = None
+        logger.error(f"Failed to initialize Groq service: {str(e)}")
+        groq_service = None
     
     try:
         ocr_service = OCRService()
@@ -73,11 +73,11 @@ def create_app(config_name=None):
         ocr_service = None
     
     # Initialize fraud analysis service
-    fraud_analysis_service = FraudAnalysisService(gemini_service, ocr_service)
+    fraud_analysis_service = FraudAnalysisService(groq_service, ocr_service)
     logger.info("Fraud analysis service initialized")
     
     # Initialize route services
-    init_analysis_routes(app, fraud_analysis_service, gemini_service)
+    init_analysis_routes(app, fraud_analysis_service, groq_service)
     
     # Register routes
     register_routes(app)
@@ -103,7 +103,7 @@ def create_app(config_name=None):
             'status': 'healthy',
             'message': 'Citizen Fraud Shield Backend is running',
             'services': {
-                'gemini': 'initialized' if gemini_service else 'failed',
+                'groq': 'initialized' if groq_service else 'failed',
                 'ocr': 'initialized' if ocr_service else 'failed',
                 'database': 'initialized'
             }

@@ -8,8 +8,8 @@ logger = get_logger(__name__)
 class FraudAnalysisService:
     """Service for fraud analysis and report management"""
     
-    def __init__(self, gemini_service, ocr_service):
-        self.gemini_service = gemini_service
+    def __init__(self, groq_service, ocr_service):
+        self.groq_service = groq_service
         self.ocr_service = ocr_service
     
     def analyze_text(self, text):
@@ -17,7 +17,7 @@ class FraudAnalysisService:
         Analyze text for fraud
         
         Process:
-        - Send message to Gemini
+        - Send message to Groq
         - Detect scam type
         - Calculate risk score
         - Generate explanation
@@ -25,8 +25,8 @@ class FraudAnalysisService:
         - Store in database
         """
         try:
-            # Analyze using Gemini
-            analysis = self.gemini_service.analyze_for_fraud(text)
+            # Analyze using Groq
+            analysis = self.groq_service.analyze_for_fraud(text)
             
             # Extract evidence
             evidence = extract_evidence(text)
@@ -81,7 +81,7 @@ class FraudAnalysisService:
         - Save image
         - OCR using EasyOCR
         - Extract text
-        - Send text to Gemini
+        - Send text to Groq
         - Generate fraud analysis
         - Store in database
         """
@@ -101,7 +101,7 @@ class FraudAnalysisService:
                 }
             
             # Analyze extracted text
-            analysis = self.gemini_service.analyze_for_fraud(extracted_text)
+            analysis = self.groq_service.analyze_for_fraud(extracted_text)
             
             # Extract evidence
             evidence = extract_evidence(extracted_text)

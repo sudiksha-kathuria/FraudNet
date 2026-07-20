@@ -24,7 +24,7 @@ A complete, production-ready Flask backend for the **Citizen Fraud Shield** AI-p
 
 ### Services (Business Logic)
 9. **`services/__init__.py`** - Service exports
-10. **`services/gemini_service.py`** - Google Gemini API integration with multi-agent workflow
+10. **`services/groq_service.py`** - Google Groq API integration with multi-agent workflow
 11. **`services/ocr_service.py`** - EasyOCR text extraction from images
 12. **`services/fraud_analysis_service.py`** - Orchestrates text/image analysis and DB persistence
 13. **`services/report_service.py`** - NCRP report generation and dashboard analytics
@@ -64,7 +64,7 @@ User Request
 [Route Handler] (routes/)
     ↓
 [Service Layer] (services/)
-    ├→ GeminiService (AI Analysis)
+    ├→ GroqService (AI Analysis)
     ├→ OCRService (Image Text Extraction)
     ├→ FraudAnalysisService (Orchestration)
     └→ ReportService (Analytics)
@@ -78,7 +78,7 @@ User Request
 
 ### 1. Text Analysis (`POST /api/analyze-text`)
 - Input validation
-- Gemini API integration
+- Groq API integration
 - Multi-agent fraud detection workflow
 - Risk scoring (0-100)
 - Red flag identification
@@ -118,7 +118,7 @@ User Request
 
 ## Multi-Agent AI Workflow
 
-The system simulates a multi-agent architecture using Gemini API:
+The system simulates a multi-agent architecture using Groq API:
 
 ```
 Agent 1: Evidence Extraction
@@ -154,7 +154,7 @@ Agent 4: Citizen Advisory
 |-----------|-----------|---------|
 | Framework | Flask | 3.0.0 |
 | Database | SQLite + SQLAlchemy | 2.0.23 |
-| AI/ML | Google Generative AI | 0.3.0 |
+| AI/ML | Groq | 0.3.0 |
 | OCR | EasyOCR | 1.7.1 |
 | Image Processing | Pillow | 10.1.0 |
 | CORS | Flask-CORS | 4.0.0 |
@@ -196,7 +196,7 @@ Agent 4: Citizen Advisory
 cd backend
 pip install -r requirements.txt
 cp .env.example .env
-# Edit .env and add GEMINI_API_KEY
+# Edit .env and add GROQ_API_KEY
 python app.py
 ```
 
@@ -210,7 +210,7 @@ Create `.env` file with:
 ```
 FLASK_ENV=development
 FLASK_DEBUG=True
-GEMINI_API_KEY=your_key_here
+GROQ_API_KEY=your_key_here
 DATABASE_URL=sqlite:///fraud_detection.db
 PORT=8000
 HOST=0.0.0.0
@@ -246,7 +246,7 @@ Comprehensive error handling for:
 
 | Operation | Time | Notes |
 |-----------|------|-------|
-| Text Analysis | 2-5 seconds | Gemini API call |
+| Text Analysis | 2-5 seconds | Groq API call |
 | Image OCR | 5-15 seconds | First call downloads models |
 | Subsequent OCR | 3-8 seconds | Models cached |
 | Database Query | <100ms | SQLite lookup |
@@ -303,7 +303,7 @@ const response = await fetch(`${import.meta.env.VITE_API_URL}/api/analyze-text`,
 
 ## Next Steps
 
-1. **Get Gemini API Key**
+1. **Get Groq API Key**
    - Visit https://aistudio.google.com
    - Create API key
    - Add to `.env`

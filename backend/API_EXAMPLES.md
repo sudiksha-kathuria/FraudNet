@@ -374,7 +374,7 @@ curl http://localhost:8000/health
   "status": "healthy",
   "message": "Citizen Fraud Shield Backend is running",
   "services": {
-    "gemini": "initialized",
+    "groq": "initialized",
     "ocr": "initialized",
     "database": "initialized"
   }

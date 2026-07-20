@@ -11,13 +11,13 @@ analysis_bp = Blueprint('analysis', __name__, url_prefix='/api')
 
 # This will be set by app
 fraud_analysis_service = None
-gemini_service = None
+groq_service = None
 
-def init_analysis_routes(app, fraud_service, gemini_svc):
+def init_analysis_routes(app, fraud_service, groq_svc):
     """Initialize analysis routes with services"""
-    global fraud_analysis_service, gemini_service
+    global fraud_analysis_service, groq_service
     fraud_analysis_service = fraud_service
-    gemini_service = gemini_svc
+    groq_service = groq_svc
 
 @analysis_bp.route('/analyze-text', methods=['POST'])
 def analyze_text():
@@ -190,7 +190,7 @@ def generate_report():
         
         # Generate report
         report_service = ReportService()
-        report = report_service.generate_ncrp_complaint(analysis_id, gemini_service)
+        report = report_service.generate_ncrp_complaint(analysis_id, groq_service)
         
         if not report:
             return jsonify({'error': 'Analysis not found or error generating report'}), 404

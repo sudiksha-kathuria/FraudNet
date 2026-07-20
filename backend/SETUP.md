@@ -38,7 +38,7 @@ cp .env.example .env
 
 Edit `.env` and add:
 ```
-GEMINI_API_KEY=your_gemini_api_key_here
+GROQ_API_KEY=your_groq_api_key_here
 FLASK_ENV=development
 FLASK_DEBUG=True
 ```
@@ -50,7 +50,7 @@ python app.py
 
 Server starts at: `http://localhost:8000`
 
-## Getting Gemini API Key
+## Getting Groq API Key
 
 1. Go to [Google AI Studio](https://aistudio.google.com)
 2. Click "Get API Key"
@@ -70,7 +70,7 @@ Expected response:
     "status": "healthy",
     "message": "Citizen Fraud Shield Backend is running",
     "services": {
-        "gemini": "initialized",
+        "groq": "initialized",
         "ocr": "initialized",
         "database": "initialized"
     }

@@ -34,7 +34,7 @@
 │  ┌──────────────────▼──────────────────────────────────────┐  │  ││
 │  │  Service Layer                                         │  │  ││
 │  │  ┌────────────────┐  ┌──────────────┐  ┌────────────┐ │  │  ││
-│  │  │  Gemini        │  │  OCR         │  │   Fraud    │ │  │  ││
+│  │  │  Groq        │  │  OCR         │  │   Fraud    │ │  │  ││
 │  │  │  Service       │  │  Service     │  │  Analysis  │ │  │  ││
 │  │  │  (AI Analysis) │  │(EasyOCR)     │  │  Service   │ │  │  ││
 │  │  └────────────────┘  └──────────────┘  └────────────┘ │  │  ││
@@ -63,7 +63,7 @@
 ┌──────────────────────┼───────────────────────────────────────────┐  │
 │  External Services   │                                           │  │
 │  ┌──────────────────┴──────────────────┐                        │  │
-│  │  Google Generative AI (Gemini)      │                        │  │
+│  │  Groq (Groq)      │                        │  │
 │  │  - Multi-agent fraud analysis       │                        │  │
 │  │  - Natural language processing      │                        │  │
 │  └─────────────────────────────────────┘                        │  │
@@ -92,7 +92,7 @@ User Input (Text)
    - Format check
        │
        ▼
-   [Gemini Service]
+   [Groq Service]
    - Multi-agent analysis
    - Extract evidence
    - Calculate risk
@@ -140,7 +140,7 @@ User Uploads Image
    - Multi-language support
        │
        ▼
-   [Gemini Analysis]
+   [Groq Analysis]
    - Analyze extracted text
    - Calculate risk
        │
@@ -280,9 +280,9 @@ Backend Route Handler (analysis.py)
    ├─ Validate input
    ├─ Call FraudAnalysisService.analyze_text()
    │
-   ├─ GeminiService.analyze_for_fraud()
+   ├─ GroqService.analyze_for_fraud()
    │  ├─ Build prompt
-   │  ├─ Call Gemini API
+   │  ├─ Call Groq API
    │  ├─ Parse response
    │  └─ Validate result
    │
@@ -321,12 +321,12 @@ app.py (Main Entry Point)
 ├─ database/__init__.py (Database Setup)
 │  └─ models/fraud_report.py (Data Model)
 ├─ services/
-│  ├─ gemini_service.py (AI Analysis)
+│  ├─ groq_service.py (AI Analysis)
 │  │  └─ google.generativeai
 │  ├─ ocr_service.py (Image Processing)
 │  │  └─ easyocr, PIL
 │  ├─ fraud_analysis_service.py (Orchestration)
-│  │  ├─ gemini_service.py
+│  │  ├─ groq_service.py
 │  │  ├─ ocr_service.py
 │  │  ├─ models/fraud_report.py
 │  │  └─ database/__init__.py

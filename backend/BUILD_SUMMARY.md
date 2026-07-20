@@ -8,7 +8,7 @@ A **production-ready Flask backend** for the Citizen Fraud Shield AI-powered fra
 
 1. **Flask Application** - Main server with factory pattern
 2. **Database Layer** - SQLAlchemy ORM + SQLite
-3. **AI Services** - Google Gemini multi-agent workflow
+3. **AI Services** - Google Groq multi-agent workflow
 4. **OCR Service** - EasyOCR for image text extraction
 5. **Analysis Engine** - Fraud detection and classification
 6. **Report Generator** - NCRP-style complaint reports
@@ -39,7 +39,7 @@ A **production-ready Flask backend** for the Citizen Fraud Shield AI-powered fra
 ### Services (5 files)
 ```
 ✓ services/__init__.py      - Service exports
-✓ services/gemini_service.py      - Gemini AI integration
+✓ services/groq_service.py      - Groq AI integration
 ✓ services/ocr_service.py         - OCR text extraction
 ✓ services/fraud_analysis_service.py - Fraud analysis logic
 ✓ services/report_service.py      - Reports & analytics
@@ -100,7 +100,7 @@ python -m venv venv
 # Linux/Mac: source venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
-# Edit .env and add: GEMINI_API_KEY=your_key_here
+# Edit .env and add: GROQ_API_KEY=your_key_here
 python app.py
 ```
 
@@ -136,7 +136,7 @@ curl http://localhost:8000/health
 
 ### Text Analysis ✓
 - Input validation (10-10,000 chars)
-- Google Gemini API integration
+- Google Groq API integration
 - Multi-agent fraud detection
 - Risk scoring (0-100)
 - Red flag identification
@@ -279,7 +279,7 @@ curl http://localhost:8000/api/dashboard
 | Framework | Flask | 3.0.0 |
 | Database | SQLAlchemy | 2.0.23 |
 | Database | SQLite | Built-in |
-| AI/ML | Google Generative AI | 0.3.0 |
+| AI/ML | Groq | 0.3.0 |
 | OCR | EasyOCR | 1.7.1 |
 | Images | Pillow | 10.1.0 |
 | CORS | Flask-CORS | 4.0.0 |
@@ -294,7 +294,7 @@ Edit `.env` file:
 FLASK_ENV=development
 FLASK_DEBUG=True
 DATABASE_URL=sqlite:///fraud_detection.db
-GEMINI_API_KEY=your_gemini_api_key_here
+GROQ_API_KEY=your_groq_api_key_here
 HOST=0.0.0.0
 PORT=8000
 MAX_FILE_SIZE=10485760
@@ -360,7 +360,7 @@ UPLOAD_FOLDER=uploads
 
 ## 🚢 NEXT STEPS
 
-### 1. Get Gemini API Key
+### 1. Get Groq API Key
 - Visit https://aistudio.google.com
 - Create API key
 - Add to `.env`
@@ -430,7 +430,7 @@ python app.py
 
 ## 🏆 KEY FEATURES SUMMARY
 
-✅ AI-powered fraud detection using Google Gemini
+✅ AI-powered fraud detection using Google Groq
 ✅ Multi-agent workflow simulation
 ✅ Image OCR with text extraction
 ✅ Risk scoring system (0-100)
@@ -484,7 +484,7 @@ Total: 28 files organized in 8 directories
 ↓ SQLAlchemy ORM
 **Database** (SQLite)
 ↑ API Key
-**Google Generative AI** (Gemini)
+**Groq** (Groq)
 ↑ Image
 **EasyOCR** (Text extraction)
 

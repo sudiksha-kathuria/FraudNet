@@ -10,8 +10,8 @@ if not exist .env (
     echo Creating .env from .env.example...
     copy .env.example .env
     echo.
-    echo NOTE: Please update .env with your Gemini API key
-    echo GEMINI_API_KEY=your_api_key_here
+    echo NOTE: Please update .env with your Groq API key
+    echo GROQ_API_KEY=your_api_key_here
     echo.
 )
 

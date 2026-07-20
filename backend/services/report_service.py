@@ -9,7 +9,7 @@ logger = get_logger(__name__)
 class ReportService:
     """Service for generating reports and analytics"""
     
-    def generate_ncrp_complaint(self, analysis_id, gemini_service):
+    def generate_ncrp_complaint(self, analysis_id, groq_service):
         """Generate NCRP-style complaint report"""
         try:
             # Get analysis from database
