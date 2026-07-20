@@ -1,0 +1,57 @@
+/* ── Trend Chart ────────────────────────────────────────────────────────── */
+.tc-container {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.tc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.tc-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.tc-sub {
+  font-size: 11px;
+  color: #9ca3af;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+.tc-empty {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #9ca3af;
+  text-align: center;
+}
+
+.tc-tooltip {
+  background: #111827;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+.tc-tt-date {
+  color: #9ca3af;
+  margin: 0 0 2px;
+}
+
+.tc-tt-val {
+  color: #fff;
+  font-weight: 700;
+  margin: 0;
+}

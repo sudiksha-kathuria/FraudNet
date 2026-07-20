@@ -1,0 +1,138 @@
+/* ── India Heatmap ─────────────────────────────────────────────────────── */
+.ihm-container {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 24px;
+}
+
+.ihm-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ihm-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 4px;
+}
+
+.ihm-subtitle {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.ihm-no-data {
+  font-size: 11px;
+  color: #9ca3af;
+  background: #f9fafb;
+  padding: 4px 10px;
+  border-radius: 99px;
+  border: 1px solid #e5e7eb;
+}
+
+.ihm-body {
+  display: grid;
+  grid-template-columns: 1fr 160px;
+  gap: 16px;
+  align-items: start;
+}
+
+.ihm-map-wrap {
+  position: relative;
+  background: #f9fafb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ihm-tooltip {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: #111827;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  pointer-events: none;
+}
+
+.ihm-tooltip strong { font-size: 13px; }
+
+.ihm-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Legend */
+.ihm-legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.ihm-legend-bar {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(to right, #fef2f2, #dc2626);
+}
+
+/* Top states */
+.ihm-top-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 8px;
+}
+
+.ihm-top-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  padding: 4px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.ihm-top-rank {
+  color: #9ca3af;
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.ihm-top-state {
+  flex: 1;
+  color: #374151;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ihm-top-count {
+  font-weight: 700;
+  color: #dc2626;
+  flex-shrink: 0;
+}
+
+.ihm-empty {
+  font-size: 12px;
+  color: #9ca3af;
+  text-align: center;
+  line-height: 1.6;
+}

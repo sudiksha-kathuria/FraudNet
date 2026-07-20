@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { analyzeText, analyzeImage, checkUrl } from '../services/api';
 import AgentThinking from '../components/AgentThinking';
+import PatternBadge from '../components/PatternBadge';
 import './Analyzer.css';
 
 const INDIAN_STATES = [
@@ -221,6 +222,9 @@ export default function Analyzer() {
                 <span className="az-risk-score">{result.risk_score}/10</span>
               </div>
             </div>
+
+            {/* Community pattern alert */}
+            <PatternBadge scamType={result.scam_type} />
 
             <div className="az-result-sections">
               <section className="az-section">

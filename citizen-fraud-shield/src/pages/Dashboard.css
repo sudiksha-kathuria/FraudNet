@@ -7,6 +7,20 @@
 
 /* Stats */
 .db-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.db-stats-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* Trend + category row */
+.db-trend-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .db-stats-4 { grid-template-columns: repeat(2, 1fr); }
+  .db-trend-row { grid-template-columns: 1fr; }
+}
+
 
 .db-stat { padding: 1.25rem; }
 .db-stat-danger { border-color: #fecaca !important; }

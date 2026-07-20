@@ -1,0 +1,46 @@
+/* ── Pattern Badge ─────────────────────────────────────────────────────── */
+.pb-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  animation: pb-slide-in 0.3s ease;
+}
+
+@keyframes pb-slide-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pb-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.pb-text {
+  flex: 1;
+  font-size: 13px;
+  color: #92400e;
+  line-height: 1.5;
+}
+
+.pb-text strong {
+  color: #78350f;
+}
+
+.pb-pill {
+  background: #f59e0b;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 99px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}

@@ -1,5 +1,6 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from sqlalchemy import func
+from datetime import datetime, timedelta
 from utils.logger import get_logger
 from services import ReportService
 from database import db
@@ -79,3 +80,37 @@ def heatmap():
     except Exception as e:
         logger.error(f"Error in heatmap: {str(e)}")
         return jsonify({'error': f'Server error: {str(e)}'}), 500
+
+
+@dashboard_bp.route('/pattern-count', methods=['GET'])
+def pattern_count():
+    """
+    GET /api/pattern-count?scam_type=<type>
+    Returns how many times the same scam type was reported in the last 7 days.
+    Used to show 'This scam has been seen X times this week'.
+    """
+    try:
+        scam_type = request.args.get('scam_type', '').strip()
+        if not scam_type:
+            return jsonify({'count': 0}), 200
+
+        cutoff = datetime.utcnow() - timedelta(days=7)
+        session = db.get_session()
+        try:
+            count = (
+                session.query(func.count(FraudReport.id))
+                .filter(
+                    FraudReport.scam_type == scam_type,
+                    FraudReport.timestamp >= cutoff
+                )
+                .scalar() or 0
+            )
+        finally:
+            db.close_session(session)
+
+        return jsonify({'scam_type': scam_type, 'count': count, 'period': '7 days'}), 200
+
+    except Exception as e:
+        logger.error(f"Error in pattern_count: {str(e)}")
+        return jsonify({'error': f'Server error: {str(e)}'}), 500
+

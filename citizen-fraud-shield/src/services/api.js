@@ -52,6 +52,11 @@ export async function getHeatmap() {
   return response.data;
 }
 
+export async function getPatternCount(scamType) {
+  const response = await api.get('/api/pattern-count', { params: { scam_type: scamType } });
+  return response.data;
+}
+
 export async function checkUrl(url) {
   const response = await api.get('/api/check-url', { params: { url } });
   return response.data;

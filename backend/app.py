@@ -73,17 +73,17 @@ def create_app(config_name=None):
         logger.warning(f"Failed to initialize OCR service: {str(e)}")
         ocr_service = None
     
-    # Initialize Claude multi-agent service
+    # Initialize multi-agent service (uses Groq free tier — same key as above)
     try:
-        anthropic_key = app.config['ANTHROPIC_API_KEY']
-        if not anthropic_key:
-            logger.warning("ANTHROPIC_API_KEY not set. Claude multi-agent analysis disabled.")
+        groq_key = app.config['GROQ_API_KEY']
+        if not groq_key:
+            logger.warning("GROQ_API_KEY not set. Multi-agent analysis disabled.")
             claude_service = None
         else:
-            claude_service = ClaudeService(anthropic_key)
-            logger.info("Claude service initialized")
+            claude_service = ClaudeService(groq_key)
+            logger.info("Multi-agent service initialized (Groq-backed)")
     except Exception as e:
-        logger.error(f"Failed to initialize Claude service: {str(e)}")
+        logger.error(f"Failed to initialize multi-agent service: {str(e)}")
         claude_service = None
 
     # Initialize fraud analysis service
