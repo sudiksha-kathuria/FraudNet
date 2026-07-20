@@ -10,12 +10,13 @@ FraudNet provides an intuitive interface for analyzing suspicious messages and s
 
 ## Features
 
-- **Fraud Analyzer** - Paste suspicious SMS, emails, or chat logs and upload screenshots for AI-powered forensic analysis
-- **Risk Scoring** - 1 to 10 risk score with four levels: Low, Medium, High, and Critical
-- **Red Flag Detection** - Highlights specific fraud indicators within the content
-- **Dashboard** - Real-time vigilance overview with scam category distribution, critical case counts, and recent analyses
-- **Complaint Reports** - Auto-generated formal complaint summaries with evidence logs, confidence scores, and security context
-- **Contact and Support** - Built-in support form with response-time tiers for critical security events
+- **Multi-Agent AI Analyzer** - Suspicious messages go through 4 sequential AI agents: Evidence Extraction, Fraud Classification, Risk Assessment, and Citizen Advisory (powered by Groq llama-3.3-70b-versatile).
+- **Risk Scoring & Red Flag Detection** - Precise 1-100 risk score and highlighted fraud indicators.
+- **Community Pattern Badges** - Automatically alerts if the same scam type is spiking across the network (e.g. "Seen 14 times this week").
+- **Dashboard & India Heatmap** - Real-time vigilance overview with a live geographic fraud heatmap, daily trend line charts, and active case distributions.
+- **Live Threat Ticker** - Real-time animated ticker showing the last 20 fraud cases reported across the platform.
+- **NCRP Complaint Stepper** - Auto-generated formal complaint summaries with an interactive 3-step filing guide ready for cybercrime.gov.in.
+- **QuickScan Deep Linking** - Shareable `/scan?text=` links for seamless integration with WhatsApp or SMS forwarding.
 
 ## Tech Stack
 
@@ -24,6 +25,7 @@ FraudNet provides an intuitive interface for analyzing suspicious messages and s
 | Framework | React 18 + Vite |
 | Routing | React Router v6 |
 | HTTP Client | Axios (API-ready) |
+| Charts & Heatmap | Recharts |
 | Styling | Plain CSS (no UI library) |
 
 ## Project Structure
@@ -36,12 +38,19 @@ citizen-fraud-shield/
     │   ├── Navbar.jsx          # Top navigation bar
     │   ├── Sidebar.jsx         # Left sidebar (inner pages)
     │   ├── SidebarLayout.jsx   # Layout wrapper with sidebar + outlet
-    │   └── Footer.jsx          # Shared footer
+    │   ├── Footer.jsx          # Shared footer
+    │   ├── AgentThinking.jsx   # Accordion showing the 4-agent AI reasoning
+    │   ├── IndiaHeatmap.jsx    # Recharts-based geographic fraud spread
+    │   ├── TrendChart.jsx      # Daily case volume line chart
+    │   ├── LiveFeed.jsx        # Real-time threat ticker
+    │   ├── PatternBadge.jsx    # Community "seen X times" alert badge
+    │   └── NCRPStepper.jsx     # 3-step complaint filing wizard
     ├── pages/
     │   ├── Home.jsx            # Landing page with hero + feature grid
     │   ├── Analyzer.jsx        # Text + image fraud analysis
-    │   ├── Dashboard.jsx       # Vigilance overview + stats
+    │   ├── Dashboard.jsx       # Vigilance overview + stats + charts
     │   ├── Report.jsx          # Formal complaint report generator
+    │   ├── QuickScan.jsx       # WhatsApp deep-link handler
     │   └── Contact.jsx         # Contact and support form
     ├── routes/
     │   └── AppRoutes.jsx       # Route definitions
@@ -95,10 +104,14 @@ npm run build
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `POST` | `/analyze-text` | Analyze a suspicious text message |
-| `POST` | `/analyze-image` | Analyze an uploaded screenshot |
-| `GET` | `/dashboard` | Fetch dashboard stats and recent analyses |
-| `POST` | `/generate-report` | Generate a formal complaint report by analysis ID |
+| `POST` | `/analyze-text` | Run multi-agent pipeline on a text message |
+| `POST` | `/analyze-image` | Run OCR and multi-agent pipeline on screenshot |
+| `GET` | `/dashboard` | Fetch dashboard stats and trends |
+| `GET` | `/live-feed` | Fetch the last 20 cases for the real-time ticker |
+| `GET` | `/heatmap` | Fetch scam counts per Indian state |
+| `GET` | `/pattern-count` | Fetch occurrences of a specific scam type in last 7 days |
+| `GET` | `/check-url` | Scan a URL using VirusTotal |
+| `POST` | `/generate-report` | Generate a formal NCRP complaint by analysis ID |
 
 ## Branch Structure
 

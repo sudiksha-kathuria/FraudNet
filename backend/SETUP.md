@@ -52,10 +52,10 @@ Server starts at: `http://localhost:8000`
 
 ## Getting Groq API Key
 
-1. Go to [Google AI Studio](https://aistudio.google.com)
-2. Click "Get API Key"
-3. Create new API key
-4. Copy and paste into `.env` file
+1. Go to [Groq Console](https://console.groq.com/keys)
+2. Sign in or create an account
+3. Click "Create API Key"
+4. Copy and paste into your `.env` file
 
 ## Verify Installation
 
@@ -107,8 +107,7 @@ If OCR service fails to initialize:
 
 ### API Key Issues
 - Verify API key is correct in `.env`
-- Check API key is enabled in Google Cloud Console
-- Ensure it's a "Generative Language API" key
+- Ensure the key was generated in the Groq Console
 
 ### Database Issues
 - Delete `fraud_detection.db` to reset database

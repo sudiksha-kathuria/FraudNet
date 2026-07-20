@@ -20,7 +20,7 @@ An AI-powered fraud detection system using Flask, Google Groq API, and machine l
 
 - **Flask**: Web framework
 - **SQLAlchemy**: ORM for database
-- **Google Groq API**: AI-powered fraud analysis
+- **Groq API**: AI-powered multi-agent fraud analysis (llama-3.3-70b-versatile)
 - **EasyOCR**: Optical character recognition
 - **Pillow**: Image processing
 - **Flask-CORS**: CORS support
@@ -255,7 +255,65 @@ Retrieve a specific analysis by ID.
 }
 ```
 
-### 6. Health Check
+### 6. Get Live Feed
+**GET** `/api/live-feed`
+
+Retrieve the last 20 anonymized fraud reports.
+
+**Response:**
+```json
+[
+    {
+        "id": 150,
+        "scam_type": "UPI Fraud",
+        "risk_level": "Critical",
+        "risk_score": 95,
+        "timestamp": "2024-01-15T10:30:45",
+        "location_city": "Mumbai",
+        "location_state": "Maharashtra"
+    }
+]
+```
+
+### 7. Get Heatmap Data
+**GET** `/api/heatmap`
+
+Retrieve fraud counts per state.
+
+**Response:**
+```json
+[
+    {
+        "state": "Maharashtra",
+        "count": 45
+    },
+    {
+        "state": "Delhi",
+        "count": 30
+    }
+]
+```
+
+### 8. Pattern Count
+**GET** `/api/pattern-count?scam_type=<type>`
+
+Retrieve how many times a scam type was reported in the last 7 days.
+
+**Response:**
+```json
+{
+    "scam_type": "Digital Arrest Scam",
+    "count": 12,
+    "period": "7 days"
+}
+```
+
+### 9. Check URL (VirusTotal)
+**GET** `/api/check-url?url=<url>`
+
+Check a URL against VirusTotal API (requires VIRUSTOTAL_API_KEY).
+
+### 10. Health Check
 **GET** `/health`
 
 Check API health and service status.
@@ -267,6 +325,7 @@ Check API health and service status.
     "message": "Citizen Fraud Shield Backend is running",
     "services": {
         "groq": "initialized",
+        "claude": "initialized",
         "ocr": "initialized",
         "database": "initialized"
     }
@@ -291,6 +350,9 @@ CREATE TABLE fraud_reports (
     recommendation TEXT,
     explanation TEXT,
     evidence_extraction JSON,
+    agents_output JSON,
+    location_city VARCHAR(100),
+    location_state VARCHAR(100),
     status VARCHAR(20) DEFAULT 'completed'
 );
 ```
