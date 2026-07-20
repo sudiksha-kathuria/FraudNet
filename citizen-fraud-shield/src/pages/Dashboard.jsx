@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getDashboardData } from '../services/api';
+import LiveFeed from '../components/LiveFeed';
 import './Dashboard.css';
 
 const LEVEL_LABEL = { critical: 'CRITICAL', suspicious: 'SUSPICIOUS', safe: 'VERIFIED SAFE', low: 'LOW', high: 'HIGH', medium: 'MEDIUM' };
@@ -37,10 +38,13 @@ export default function Dashboard() {
     .slice(0, 5)
     .map(([name, count]) => ({ name, pct: Math.round((count / catTotal) * 100) }));
 
+  const avgScore = data?.average_risk_score ?? 0;
+
   const STATS = [
-    { label: 'TOTAL CASES ANALYZED', value: total.toLocaleString(), sub: 'All time analyses', dark: false },
-    { label: 'CRITICAL CASES',        value: critical.toLocaleString(), sub: '⚠ High priority alerts', dark: true },
-    { label: 'ACTIVE REPORTS',        value: active.toLocaleString(), sub: '⏱ High & medium risk', dark: false },
+    { label: 'TOTAL CASES ANALYZED', value: total.toLocaleString(),          sub: 'All time analyses',      dark: false },
+    { label: 'CRITICAL CASES',        value: critical.toLocaleString(),       sub: '⚠ High priority alerts',  dark: true  },
+    { label: 'ACTIVE REPORTS',        value: active.toLocaleString(),         sub: '⏱ High & medium risk',   dark: false },
+    { label: 'AVG RISK SCORE',        value: avgScore ? avgScore.toFixed(1) : '—', sub: 'Out of 100',        dark: false },
   ];
 
   return (
@@ -170,6 +174,9 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Live Threat Feed */}
+      <LiveFeed />
     </div>
   );
 }

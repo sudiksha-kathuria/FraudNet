@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import NCRPStepper from '../components/NCRPStepper';
+import { generateReport } from '../services/api';
 import './Report.css';
 
 const MOCK_REPORT = `I. SUBJECT INFORMATION
@@ -19,11 +21,33 @@ III. EVIDENCE & LOG ANALYSIS
 [LOG_ENTRY_20241023_1422] - Citizen Fraud Shield auto-generated report initiated.`;
 
 export default function Report() {
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied]       = useState(false);
+  const [analysisId, setAnalysisId] = useState('');
+  const [report, setReport]       = useState(null);
+  const [loading, setLoading]     = useState(false);
+  const [fetchError, setFetchError] = useState('');
+
+  async function handleGenerate() {
+    const id = parseInt(analysisId, 10);
+    if (!id) { setFetchError('Please enter a valid Analysis ID'); return; }
+    setFetchError('');
+    setLoading(true);
+    setReport(null);
+    try {
+      const data = await generateReport(id);
+      if (data.report) setReport(data.report);
+      else setFetchError('No report found for that ID');
+    } catch (e) {
+      setFetchError(e.response?.data?.error || 'Failed to generate report');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function handleCopy() {
+    const text = report ? JSON.stringify(report, null, 2) : MOCK_REPORT;
     try {
-      await navigator.clipboard.writeText(MOCK_REPORT);
+      await navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -37,13 +61,29 @@ export default function Report() {
       <div className="rp-header">
         <div>
           <p className="rp-super">Fraud Analysis Report</p>
-          <h1>Case ID: <span className="rp-case-id">CFS-2024-8892-XT</span></h1>
+          <h1>Case ID: <span className="rp-case-id">{report?.complaint_id || 'CFS-2024-8892-XT'}</span></h1>
         </div>
         <div className="rp-header-actions">
+          {/* Fetch by Analysis ID */}
+          <div className="rp-fetch-row">
+            <input
+              type="number"
+              className="rp-fetch-input"
+              placeholder="Analysis ID"
+              value={analysisId}
+              onChange={e => setAnalysisId(e.target.value)}
+            />
+            <button className="btn-dark" onClick={handleGenerate} disabled={loading}>
+              {loading ? 'Loading...' : 'Generate Report'}
+            </button>
+          </div>
           <button className="btn-outline" onClick={handleCopy}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             {copied ? 'Copied!' : 'Copy to Clipboard'}
           </button>
+        </div>
+      </div>
+      {fetchError && <p style={{color:'#ef4444', fontSize:'13px', marginBottom:'12px'}}>{fetchError}</p>}
           <button className="btn-dark">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Download PDF
@@ -138,6 +178,8 @@ export default function Report() {
           </table>
         </div>
       </div>
+      {/* NCRP Filing Stepper */}
+      {report && <NCRPStepper report={report} />}
     </div>
   );
 }

@@ -11,7 +11,8 @@ from services import (
     GroqService,
     OCRService,
     FraudAnalysisService,
-    ReportService
+    ReportService,
+    ClaudeService,
 )
 from routes import register_routes
 from routes.analysis import init_analysis_routes
@@ -72,12 +73,25 @@ def create_app(config_name=None):
         logger.warning(f"Failed to initialize OCR service: {str(e)}")
         ocr_service = None
     
+    # Initialize Claude multi-agent service
+    try:
+        anthropic_key = app.config['ANTHROPIC_API_KEY']
+        if not anthropic_key:
+            logger.warning("ANTHROPIC_API_KEY not set. Claude multi-agent analysis disabled.")
+            claude_service = None
+        else:
+            claude_service = ClaudeService(anthropic_key)
+            logger.info("Claude service initialized")
+    except Exception as e:
+        logger.error(f"Failed to initialize Claude service: {str(e)}")
+        claude_service = None
+
     # Initialize fraud analysis service
-    fraud_analysis_service = FraudAnalysisService(groq_service, ocr_service)
+    fraud_analysis_service = FraudAnalysisService(groq_service, ocr_service, claude_service)
     logger.info("Fraud analysis service initialized")
-    
+
     # Initialize route services
-    init_analysis_routes(app, fraud_analysis_service, groq_service)
+    init_analysis_routes(app, fraud_analysis_service, groq_service, claude_service)
     
     # Register routes
     register_routes(app)
@@ -104,6 +118,7 @@ def create_app(config_name=None):
             'message': 'Citizen Fraud Shield Backend is running',
             'services': {
                 'groq': 'initialized' if groq_service else 'failed',
+                'claude': 'initialized' if claude_service else 'not configured',
                 'ocr': 'initialized' if ocr_service else 'failed',
                 'database': 'initialized'
             }

@@ -1,3 +1,73 @@
+/* ── Location row ──────────────────────────────────────────────────────── */
+.az-location-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+  flex-wrap: wrap;
+}
+
+.az-location-label {
+  font-size: 13px;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.az-location-input,
+.az-location-select {
+  padding: 7px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #374151;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.az-location-input:focus,
+.az-location-select:focus {
+  border-color: #111827;
+}
+
+.az-location-input { width: 160px; }
+.az-location-select { width: 180px; }
+
+/* ── URL Safety Cards ──────────────────────────────────────────────────── */
+.az-url-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.az-url-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  flex-wrap: wrap;
+}
+
+.az-url-text {
+  font-size: 12px;
+  word-break: break-all;
+  flex: 1;
+  color: #374151;
+}
+
+.az-url-status {
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.az-url-dangerous { border-color: #ef4444; background: #fef2f2; }
+.az-url-clean     { border-color: #22c55e; background: #f0fdf4; }
+.az-url-checking  { border-color: #e5e7eb; }
+
 .az-page { display: flex; flex-direction: column; gap: 1.5rem; }
 
 .az-header h1 { font-size: 1.75rem; font-weight: 800; color: #111827; margin-bottom: 0.3rem; }

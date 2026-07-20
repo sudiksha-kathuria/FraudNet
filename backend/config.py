@@ -15,6 +15,8 @@ class Config:
     
     # API Keys
     GROQ_API_KEY = os.getenv('GROQ_API_KEY')
+    ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
+    VIRUSTOTAL_API_KEY = os.getenv('VIRUSTOTAL_API_KEY', '')
     
     # File Upload
     MAX_FILE_SIZE = int(os.getenv('MAX_FILE_SIZE', 10485760))  # 10MB

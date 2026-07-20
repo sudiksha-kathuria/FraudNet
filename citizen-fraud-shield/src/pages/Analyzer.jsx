@@ -1,6 +1,16 @@
-import { useState, useRef } from 'react';
-import { analyzeText, analyzeImage } from '../services/api';
+import { useState, useRef, useEffect } from 'react';
+import { analyzeText, analyzeImage, checkUrl } from '../services/api';
+import AgentThinking from '../components/AgentThinking';
 import './Analyzer.css';
+
+const INDIAN_STATES = [
+  'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
+  'Delhi', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand',
+  'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur',
+  'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan',
+  'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh',
+  'Uttarakhand', 'West Bengal',
+];
 
 function normalizeResult(data) {
   const level = (data.risk_level || 'low').toLowerCase();
@@ -9,26 +19,39 @@ function normalizeResult(data) {
     ? data.recommendation.split('\n').filter(Boolean)
     : [];
   return {
-    id: data.id,
-    scam_type: data.scam_type || 'Unknown',
-    risk_level: level,
-    risk_score: parseFloat(score),
-    red_flags: data.red_flags || [],
-    explanation: data.explanation || '',
+    id:                data.id,
+    scam_type:         data.scam_type || 'Unknown',
+    risk_level:        level,
+    risk_score:        parseFloat(score),
+    red_flags:         data.red_flags || [],
+    explanation:       data.explanation || '',
     recommended_actions: actions,
-    evidence: data.evidence || {},
+    evidence:          data.evidence || {},
+    agents:            data.agents || null,
   };
 }
 
 export default function Analyzer() {
-  const [text, setText] = useState('');
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
-  const [error, setError] = useState('');
-  const [dragOver, setDragOver] = useState(false);
+  const [text, setText]           = useState('');
+  const [file, setFile]           = useState(null);
+  const [preview, setPreview]     = useState('');
+  const [loading, setLoading]     = useState(false);
+  const [result, setResult]       = useState(null);
+  const [error, setError]         = useState('');
+  const [dragOver, setDragOver]   = useState(false);
+  const [locationCity, setCity]   = useState('');
+  const [locationState, setState] = useState('');
+  const [urlSafety, setUrlSafety] = useState({});
   const fileRef = useRef();
+
+  // Prefill from QuickScan deep-link
+  useEffect(() => {
+    const prefill = sessionStorage.getItem('prefill_text');
+    if (prefill) {
+      setText(prefill);
+      sessionStorage.removeItem('prefill_text');
+    }
+  }, []);
 
   function handleFileSelect(selected) {
     if (!selected) return;
@@ -43,18 +66,29 @@ export default function Analyzer() {
     }
     setError('');
     setResult(null);
+    setUrlSafety({});
     setLoading(true);
     try {
       let data;
       if (file) {
-        data = await analyzeImage(file);
+        data = await analyzeImage(file, locationCity, locationState);
       } else {
-        data = await analyzeText(text.trim());
+        data = await analyzeText(text.trim(), locationCity, locationState);
       }
       if (data.error) {
         setError(data.error);
       } else {
-        setResult(normalizeResult(data));
+        const normalized = normalizeResult(data);
+        setResult(normalized);
+
+        // Kick off URL safety checks in background
+        const urls = normalized.evidence?.urls || [];
+        urls.forEach(async (url) => {
+          try {
+            const safety = await checkUrl(url);
+            setUrlSafety(prev => ({ ...prev, [url]: safety }));
+          } catch (_) {}
+        });
       }
     } catch (err) {
       setError(
@@ -124,6 +158,28 @@ export default function Analyzer() {
         </div>
       </div>
 
+      {/* ── LOCATION (optional) ── */}
+      <div className="az-location-row">
+        <span className="az-location-label">📍 Location (optional — helps build the fraud heatmap)</span>
+        <input
+          type="text"
+          className="az-location-input"
+          placeholder="City / District"
+          value={locationCity}
+          onChange={e => setCity(e.target.value)}
+          disabled={loading}
+        />
+        <select
+          className="az-location-select"
+          value={locationState}
+          onChange={e => setState(e.target.value)}
+          disabled={loading}
+        >
+          <option value="">Select State</option>
+          {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+        </select>
+      </div>
+
       {error && <p className="error-msg">{error}</p>}
 
       <div className="az-analyze-row">
@@ -149,7 +205,7 @@ export default function Analyzer() {
           <div className="az-awaiting">
             <div className="az-spinner" />
             <h3>Analyzing...</h3>
-            <p>Running AI heuristics and cross-referencing fraud database.</p>
+            <p>Running multi-agent AI pipeline — Evidence → Classification → Risk → Advisory</p>
           </div>
         )}
 
@@ -185,15 +241,37 @@ export default function Analyzer() {
                   </ol>
                 </section>
               )}
+
+              {/* URL Safety Cards */}
               {result.evidence?.urls?.length > 0 && (
                 <section className="az-section">
                   <h4>Suspicious URLs Found</h4>
-                  <ul className="az-flags">
-                    {result.evidence.urls.map((u, i) => <li key={i}><code>{u}</code></li>)}
-                  </ul>
+                  <div className="az-url-cards">
+                    {result.evidence.urls.map((u, i) => {
+                      const safety = urlSafety[u];
+                      return (
+                        <div key={i} className={`az-url-card ${safety?.malicious > 0 ? 'az-url-dangerous' : safety ? 'az-url-clean' : 'az-url-checking'}`}>
+                          <code className="az-url-text">{u}</code>
+                          {!safety && <span className="az-url-status">Checking VirusTotal...</span>}
+                          {safety && (
+                            <span className="az-url-status">
+                              {safety.malicious > 0
+                                ? `🚨 Malicious (${safety.malicious} engines flagged)`
+                                : safety.suspicious > 0
+                                ? `⚠️ Suspicious (${safety.suspicious} engines flagged)`
+                                : '✅ Clean'}
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </section>
               )}
             </div>
+
+            {/* Multi-agent pipeline visualization */}
+            {result.agents && <AgentThinking agents={result.agents} />}
           </div>
         )}
       </div>

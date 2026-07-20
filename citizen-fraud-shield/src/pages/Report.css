@@ -1,11 +1,38 @@
+/* ── Report fetch row ───────────────────────────────────────────────────── */
+.rp-fetch-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.rp-fetch-input {
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #374151;
+  width: 120px;
+  outline: none;
+}
+
+.rp-fetch-input:focus { border-color: #111827; }
+
+.rp-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .rp-page { display: flex; flex-direction: column; gap: 1.5rem; }
+
 
 /* Header */
 .rp-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
 .rp-super { font-size: 0.8rem; color: #9ca3af; margin-bottom: 0.3rem; }
 .rp-header h1 { font-size: 1.4rem; font-weight: 700; color: #111827; }
 .rp-case-id { font-family: monospace; color: #6b7280; font-size: 1.1rem; }
-.rp-header-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+
 
 /* Info cards */
 .rp-info-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }

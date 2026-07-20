@@ -1,0 +1,135 @@
+/* ── Agent Thinking ────────────────────────────────────────────────────── */
+.at-container {
+  background: #0f172a;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 24px;
+  border: 1px solid #1e293b;
+}
+
+.at-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.at-icon { font-size: 18px; }
+
+.at-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0;
+}
+
+.at-badge {
+  margin-left: auto;
+  background: #1e293b;
+  color: #94a3b8;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-family: monospace;
+  letter-spacing: 0.04em;
+}
+
+.at-subtitle {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0 0 16px;
+}
+
+.at-agents {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.at-agent {
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.at-agent-open {
+  border-color: var(--agent-color, #3b82f6);
+}
+
+.at-agent-header {
+  width: 100%;
+  background: #1e293b;
+  border: none;
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  transition: background 0.2s ease;
+}
+
+.at-agent-header:hover { background: #263347; }
+
+.at-step {
+  width: 20px;
+  height: 20px;
+  background: var(--agent-color, #3b82f6);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.at-agent-icon { font-size: 14px; }
+
+.at-agent-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e2e8f0;
+  flex: 1;
+}
+
+.at-status {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.at-status-done {
+  background: #14532d;
+  color: #86efac;
+}
+
+.at-chevron {
+  font-size: 10px;
+  color: #64748b;
+}
+
+.at-agent-body {
+  background: #0f172a;
+  padding: 12px 14px;
+  animation: fade-in 0.2s ease;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.at-json {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: #94a3b8;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}

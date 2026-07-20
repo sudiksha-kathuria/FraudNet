@@ -24,7 +24,12 @@ class FraudReport(Base):
     
     # Additional info
     evidence_extraction = Column(JSON, nullable=True)  # Phone numbers, URLs, UPI IDs, names, organizations
+    agents_output = Column(JSON, nullable=True)         # Full multi-agent output
     status = Column(String(20), default='completed', nullable=False)
+
+    # Location (optional, for heatmap)
+    location_city  = Column(String(100), nullable=True)
+    location_state = Column(String(100), nullable=True)
     
     def to_dict(self):
         """Convert model to dictionary"""
@@ -40,7 +45,10 @@ class FraudReport(Base):
             'recommendation': self.recommendation,
             'explanation': self.explanation,
             'evidence_extraction': self.evidence_extraction,
-            'status': self.status
+            'agents_output': self.agents_output,
+            'status': self.status,
+            'location_city': self.location_city,
+            'location_state': self.location_state,
         }
     
     def __repr__(self):
